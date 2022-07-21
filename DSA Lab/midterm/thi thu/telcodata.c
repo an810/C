@@ -4,7 +4,6 @@
 
 #define MAX_LEN 50
 
-
 // telecom data check and query
 typedef struct TNode
 {
@@ -136,6 +135,5 @@ int main()
             printf("%d\n", duration_from(head, fnum));
         }
     }
-    
     return 0;
 }
