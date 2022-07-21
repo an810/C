@@ -13,9 +13,9 @@ int main()
     scanf("%d", &n);
     route = (int *)malloc(sizeof(int)*n);
     visited = (int *)malloc(sizeof(int)*n);
-    int** dis = (int**)malloc(n * sizeof(int*));
+    int** dis = (int**)malloc((n+1) * sizeof(int*));
         for (int i = 1; i <= n; i++)
-            dis[i] = (int*)malloc(n * sizeof(int));
+            dis[i] = (int*)malloc((n+1) * sizeof(int));
 
     for (int i=1; i<=n; i++)
     {
@@ -29,7 +29,7 @@ int main()
         }
     }
     scanf("%d", &num_cons);
-    int** cons = (int**)malloc(num_cons * sizeof(int*));
+    int** cons = (int**)malloc((num_cons+1) * sizeof(int*));
     for (int i = 1; i <= num_cons; i++)
         cons[i] = (int*)malloc(2 * sizeof(int));
 
