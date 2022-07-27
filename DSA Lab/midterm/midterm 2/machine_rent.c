@@ -43,14 +43,13 @@ int main()
         int end = e[index];
         int cost = c[index];
         int total_cost = cost;
-    
         for (int i=index+1; i<n; i++)
         {
             if (s[i] > end)
             {
                 total_cost += c[i];
                 end = e[i];
-            }
+            }   
         }
         ans = max(ans, total_cost);
         index++;
