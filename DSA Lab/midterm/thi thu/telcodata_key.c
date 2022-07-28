@@ -14,7 +14,7 @@ typedef struct Node
     struct Node* rightchild;
 }Node;
 
-Node *root[M];
+Node *root[M]; 
 
 int totalCalls = 0;
 int ansCheckNumber;
