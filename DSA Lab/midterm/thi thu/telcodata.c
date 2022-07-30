@@ -1,112 +1,82 @@
+// telcodata BST 
 #include<stdio.h>
-#include<stdlib.h>
 #include<string.h>
+#include<stdlib.h>
 
-#define MAX_LEN 50
+#define MAX_LEN 20
 
-// telecom data check and query
-typedef struct TNode
+typedef struct Node
 {
-    char from_num[MAX_LEN];
-    char to_num[MAX_LEN];
-    int call_duration;
-    struct TNode* next;
+    char fromnum[MAX_LEN];
+    int nbcall;
+    int duration;
+    struct Node* left;
+    struct Node* right;
 }Node;
 
-Node* head;
+Node* root;
+int total_call = 0;
+int checknum = 1;
 
-Node* makeNode(char *fnum, char *tnum, int duration)
+Node* makeNode(char *fromnum, int nbcall, int duration)
 {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    strcpy(newNode->from_num, fnum);
-    strcpy(newNode->to_num, tnum);
-    newNode->call_duration = duration;
-    newNode->next = NULL;
-    return newNode;
+    Node* newnode = (Node*)malloc(sizeof(Node));
+    strcpy(newnode->fromnum, fromnum);
+    newnode->nbcall = nbcall; 
+    newnode->duration = duration;
+    newnode->left = NULL; newnode->right = NULL;
+    return newnode;
 }
 
-int check_phone_number(Node* head)
+Node* insertBST(char *fromnum, int nbcall, int duration, Node* r)
 {
-    int count =0;
-    if (head == NULL) return 0;
-    Node* temp = head;
-    while (temp != NULL)
+    if (r == NULL)
     {
-        if (strlen(temp->from_num) != 10) count++;
-        if (strlen(temp->to_num) != 10) count++;
-        temp = temp->next;
+        r = makeNode(fromnum, nbcall, duration);
+        return r;
     }
-    if (count == 0) return 1;
-    else return 0;
+    int check = strcmp(r->fromnum, fromnum);
+    if (check == 0 ) return r;
+    if (check < 0) r->left = insertBST(fromnum, nbcall, duration, r->left);
+    else r->right = insertBST(fromnum, nbcall, duration, r->right);
+    return r;
 }
-//number of calls from a number
-int count_calls_from(Node* head, char* fnum)
+
+Node* find(char* num, Node* r)
 {
-    int count = 0;
-    if (head == NULL) return 0;
-    Node* temp = head;
-    while (temp != NULL)
-    {
-        if (strcmp(temp->from_num, fnum) == 0) count++;
-        temp = temp->next;
-    }
-    return count;
-}
-//number of total calls
-int count_total_calls(Node* head)
-{
-    int count = 0;
-    if (head == NULL) return 0;
-    Node* temp = head;
-    while (temp != NULL)
-    {
-        count++;
-        temp = temp->next;
-    }
-    return count;
-}
-//duration of calls from a number
-int duration_from(Node* head, char* fnum)
-{
-    int duration = 0;
-    if (head == NULL) return 0;
-    Node* temp = head;
-    while (temp != NULL)
-    {
-        if (strcmp(temp->from_num, fnum) == 0) duration += temp->call_duration;
-        temp = temp->next;
-    }
-    return duration;
+    if (r== NULL) return NULL;
+    int check = strcmp(num, r->fromnum);
+    if (check == 0) return r;
+    if (check < 0) return find(num, r->left);
+    else return find(num,r->right);
 }
 
 int main()
 {
     char cmd1[MAX_LEN];
     char cmd2[MAX_LEN];
-    head = NULL;
+    root = NULL;
     while(1)
     {
         scanf("%s", cmd1);
         if (strcmp(cmd1, "#") == 0) break;
         if (strcmp(cmd1, "call") == 0)
         {
-            char date[MAX_LEN];
-            Node* temp = makeNode(date,date,0);   
+            char fnum[MAX_LEN], tnum[MAX_LEN], date[MAX_LEN];  
             int gio1, phut1, giay1, gio2, phut2, giay2;
-            scanf("%s %s %s %d:%d:%d %d:%d:%d", temp->from_num, temp->to_num, date, &gio1, &phut1, &giay1, &gio2, &phut2, &giay2);
-            temp->call_duration = (gio2 - gio1) * 3600 + (phut2 - phut1) * 60 + (giay2 - giay1);
-            if (head == NULL)
+            scanf("%s %s %s %d:%d:%d %d:%d:%d", fnum, tnum, date, &gio1, &phut1, &giay1, &gio2, &phut2, &giay2);
+            int duration = (gio2 - gio1) * 3600 + (phut2 - phut1) * 60 + (giay2 - giay1);
+            if (strlen(fnum)<10 || strlen(tnum)<10) checknum = 0;
+            total_call++;
+            Node* p = find(fnum, root);
+            if (p == NULL)
             {
-                head = temp;
+                root = insertBST(fnum, 1, duration, root);
             }
-            else
+            else 
             {
-                Node* temp2 = head;
-                while (temp2->next != NULL)
-                {
-                    temp2 = temp2->next;
-                }
-                temp2->next = temp;
+                p->duration+= duration;
+                p->nbcall++;
             }
         }
     }
@@ -116,24 +86,29 @@ int main()
         if (strcmp(cmd2, "#") == 0) break;
         if (strcmp(cmd2, "?check_phone_number") == 0)
         {
-            printf("%d\n", check_phone_number(head));
+            printf("%d\n", checknum);
         }
         else if (strcmp(cmd2, "?number_calls_from") == 0)
         {
             char fnum[MAX_LEN];
             scanf("%s", fnum);
-            printf("%d\n", count_calls_from(head, fnum));
+            Node* p = find(fnum,root);
+            if (p==NULL) printf("0\n");
+            else printf("%d\n",p->nbcall );
         } 
         else if (strcmp(cmd2, "?number_total_calls")==0)
         {
-            printf("%d\n", count_total_calls(head));
+            printf("%d\n", total_call);
         }
         else if (strcmp(cmd2, "?count_time_calls_from") == 0)
         {
             char fnum[MAX_LEN];
             scanf("%s", fnum);
-            printf("%d\n", duration_from(head, fnum));
+            Node* p = find(fnum, root);
+            if (p==NULL) printf("0\n");
+            else printf("%d\n", p->duration);
         }
     }
+    
     return 0;
 }
