@@ -37,15 +37,15 @@ Node* insertBST(char *fromnum, int nbcall, int duration, Node* r)
     }
     int check = strcmp(r->fromnum, fromnum);
     if (check == 0 ) return r;
-    if (check < 0) r->left = insertBST(fromnum, nbcall, duration, r->left);
-    else r->right = insertBST(fromnum, nbcall, duration, r->right);
+    if (check < 0) r->right = insertBST(fromnum, nbcall, duration, r->right);
+    else r->left = insertBST(fromnum, nbcall, duration, r->left);
     return r;
 }
 
 Node* find(char* num, Node* r)
 {
     if (r== NULL) return NULL;
-    int check = strcmp(num, r->fromnum);
+    int check = strcmp(r->fromnum,num);
     if (check == 0) return r;
     if (check < 0) return find(num, r->left);
     else return find(num,r->right);
