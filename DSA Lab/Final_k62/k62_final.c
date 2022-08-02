@@ -66,18 +66,13 @@ void read_file()
     char class_code[11];
     char course_code[11];
     char time_location[50];
-    char line[100];    
-    int count = 1;
-    while(fgets(line, sizeof(line), fin))
+    while(1)
     {
-        if (count % 3 == 1) strcpy(class_code, line);
-        else if (count % 3 == 2) strcpy(course_code, line);
-        else 
-        {
-            strcpy(time_location, line);
-            head = insertNode(head, class_code, course_code, time_location);
-        }
-        count++;
+        fscanf(fin, "%s", class_code);
+        fscanf(fin, "%s\n", course_code);
+        fscanf(fin, "%[^\n]", time_location);
+        head = insertNode(head, class_code, course_code, time_location);
+        if (feof(fin)) break;
     }
     fclose(fin);
 }
@@ -87,8 +82,8 @@ void traverse(Node* h)
     Node *cur = h;
     for (cur = h; cur != NULL; cur = cur->next)
     {
-        printf("%s", cur->class_code);
-        printf("%s", cur->course_code);
+        printf("%s\n", cur->class_code);
+        printf("%s\n", cur->course_code);
         printf("%s\n", cur->time_location);
     }
 }
@@ -105,9 +100,9 @@ void search()
     }
     else
     {
-        printf("%s", cur->class_code);
-        printf("%s", cur->course_code);
-        printf("%s", cur->time_location);
+        printf("%s\n", cur->class_code);
+        printf("%s\n", cur->course_code);
+        printf("%s\n", cur->time_location);
     }
 }
 
@@ -217,8 +212,7 @@ void count_class()
     Node_course *cur_course = head_course;
     while (cur_course != NULL)
     {
-        printf("%s", cur_course->course_code);
-        printf("%d\n", cur_course->number_course);
+        printf("%s %d\n", cur_course->course_code, cur_course->number_course);
         cur_course = cur_course->next;
     }
 }
