@@ -175,7 +175,7 @@ Node_course * makecourse(char course[])
     Node_course *p = (Node_course *)malloc(sizeof(Node_course));
     strcpy(p->course_code,course);
     p->number_course = 1;
-    p->next = NULL;
+    p->next = head_course;
     return p;
 }
 
