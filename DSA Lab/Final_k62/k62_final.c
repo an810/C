@@ -175,7 +175,7 @@ Node_course * makecourse(char course[])
     Node_course *p = (Node_course *)malloc(sizeof(Node_course));
     strcpy(p->course_code,course);
     p->number_course = 1;
-    p->next = head_course;
+    p->next = NULL;
     return p;
 }
 
@@ -193,6 +193,25 @@ Node_course* findcourse(Node_course *h, char course[])
     return NULL;
 }
 
+Node_course* insertcourse(Node_course *head, char course[])
+{
+    Node_course *p = makecourse(course);
+    if (head == NULL)
+    {
+        head = p;
+    }
+    else
+    {
+        Node_course *cur = head;
+        while (cur->next != NULL)
+        {
+            cur = cur->next;
+        }
+        cur->next = p;
+    }
+    return head;
+}
+
 void count_class()
 {
     Node *cur = head;
@@ -201,7 +220,7 @@ void count_class()
         Node_course *p = findcourse(head_course, cur->course_code);
         if (p == NULL)
         {
-            head_course = makecourse(cur->course_code);
+            head_course = insertcourse(head_course, cur->course_code);
         }
         else
         {
